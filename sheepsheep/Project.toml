@@ -1,0 +1,16 @@
+[project]
+name = "sheepsheep"
+version = "0.0.1"
+type = "executable"
+authors = ["<John Doe> johnDoe@mail.com"]
+
+[dependencies]
+libraries = []
+library_path = []
+
+[compiler]
+cpu = "generic"
+optimize = "o2"
+sources = ["./src"]
+version = "0.0.4"
+build_dir = "./build"

@@ -1,0 +1,44 @@
+import std::libc{
+	printf, strlen,
+	malloc, free
+};
+import std::libc::abi{c_int};
+
+enum TokenType {
+	Inc,
+    Dec,
+    Print,
+    Read,
+    PtrRight,
+    PtrLeft,
+    LoopStart,
+    LoopEnd,
+    Uknown
+}
+
+struct Token {
+	typ: TokenType;
+}
+
+fn tokenize(src: const char*, tokens: Token*) {
+	var i = 0;
+	var loopBalance = 0;
+
+	const len = strlen(src);
+
+	while (i < len) {
+		
+		break;
+	}
+	printf("%d\n", len);
+}
+
+pub fn main() c_int {
+	const str = "بع بع بع بع";
+
+	const tokens: Token* = malloc(500);
+
+	tokenize(str, tokens);
+
+	return 0;
+}
