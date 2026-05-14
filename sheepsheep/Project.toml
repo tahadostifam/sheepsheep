@@ -2,7 +2,7 @@
 name = "sheepsheep"
 version = "0.0.1"
 type = "executable"
-authors = ["<John Doe> johnDoe@mail.com"]
+authors = ["Taha. Dostifam mr.tahadostifam@gmail.com"]
 
 [dependencies]
 libraries = []
