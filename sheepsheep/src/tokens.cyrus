@@ -1,0 +1,98 @@
+import std::libc{stderr, fprintf, abort, memcmp};
+
+pub const max_tokens = 2000;
+
+pub enum TokenType {
+	Inc,
+    Dec,
+    Print,
+    Read,
+    PtrRight,
+    PtrLeft,
+    LoopStart,
+    LoopEnd,
+    Unknown
+}
+
+pub struct Token {
+	pub ty: TokenType;
+}
+
+pub fn tokenize(src_data: char*, src_len: usize, tokens: Token*) usize {
+	var i: usize = 0;
+	var token_count: usize = 0;
+	var loopBalance: isize = 0;
+
+	const inc = "بع";
+	const dec = "بععع";
+	const print = "بعع";
+	const read = "بعبع";
+	const loop_start = "بعبعع";
+	const loop_end = "بعبعبع";
+	const ptr_right = "بعععع";
+	const ptr_left = "بععععع";
+
+	while (i < src_len) {
+		if (i + 12 <= src_len && match(src_data + i, ptr_left, 12)) {
+			tokens[token_count].ty = TokenType.PtrLeft;
+			token_count++;
+			i += 12;
+		}
+		else if (i + 12 <= src_len && match(src_data + i, loop_end, 12)) {
+			tokens[token_count].ty = TokenType.LoopEnd;
+			token_count++;
+			loopBalance -= 1;
+			i += 12;
+		}
+		else if (i + 10 <= src_len && match(src_data + i, ptr_right, 10)) {
+			tokens[token_count].ty = TokenType.PtrRight;
+			token_count++;
+			i += 10;
+		}
+		else if (i + 10 <= src_len && match(src_data + i, loop_start, 10)) {
+			tokens[token_count].ty = TokenType.LoopStart;
+			token_count++;
+			loopBalance += 1;
+			i += 10;
+		}
+		else if (i + 8 <= src_len && match(src_data + i, read, 8)) {
+			tokens[token_count].ty = TokenType.Read;
+			token_count++;
+			i += 8;
+		}
+		else if (i + 8 <= src_len && match(src_data + i, dec, 8)) {
+			tokens[token_count].ty = TokenType.Dec;
+			token_count++;
+			i += 8;
+		}
+		else if (i + 6 <= src_len && match(src_data + i, print, 6)) {
+			tokens[token_count].ty = TokenType.Print;
+			token_count++;
+			i += 6;
+		}
+		else if (i + 4 <= src_len && match(src_data + i, inc, 4)) {
+			tokens[token_count].ty = TokenType.Inc;
+			token_count++;
+			i += 4;
+		}
+		else {
+			if (src_data[i] == ' ' || src_data[i] == '\n') {
+				i++;
+			} else {
+				fprintf(stderr, "error: unrecognized token: '%c'\n", src_data[i]);
+				abort();
+			}
+		}
+	}
+
+	if (loopBalance != 0) {
+		fprintf(stderr, "error: unmatched loop brackets\n");
+		abort();
+	}
+
+	return token_count;
+}
+
+inline fn match(lhs: char*, pat: char*, len: usize) bool {
+	return memcmp(lhs, pat, len) == 0;
+}
